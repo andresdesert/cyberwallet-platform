@@ -407,23 +407,32 @@ const useRegisterFormState = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleNext = () => {
+  const handleNext = React.useCallback(() => {
+    console.log('🔄 [handleNext] Función llamada, currentStep actual:', currentStep);
+    console.log('🔄 [handleNext] Tipo de currentStep:', typeof currentStep);
+    console.log('🔄 [handleNext] currentStep < 3:', currentStep < 3);
+    
     if (validateStep(currentStep)) {
       if (currentStep < 3) {
-        setCurrentStep((prev) => prev + 1);
-        log.info(`[RegisterForm] Avanzando al paso ${currentStep + 1}`);
+        const newStep = currentStep + 1;
+        console.log('🔄 [handleNext] Validación exitosa, avanzando a paso:', newStep);
+        setCurrentStep(newStep);
+        console.log('🔄 [handleNext] Cambiando a paso:', newStep);
+        log.info(`[RegisterForm] Avanzando al paso ${newStep}`);
       } else {
+        console.log('🔄 [handleNext] Ya estamos en el último paso, ejecutando submit');
         handleSubmit();
       }
     } else {
+      console.log('🔄 [handleNext] Validación falló en el paso:', currentStep);
       enqueueSnackbar('Por favor, corrige los errores antes de continuar', {
         variant: 'error',
       });
       log.warn('[RegisterForm] Errores de validación en el paso', currentStep);
     }
-  };
+  }, [currentStep, validateStep]);
 
-  const handleBack = () => {
+  const handleBack = React.useCallback(() => {
     console.log('🔙 [handleBack] Función llamada, currentStep actual:', currentStep);
     console.log('🔙 [handleBack] Tipo de currentStep:', typeof currentStep);
     console.log('🔙 [handleBack] currentStep > 1:', currentStep > 1);
@@ -437,7 +446,7 @@ const useRegisterFormState = () => {
     } else {
       console.log('🔙 [handleBack] No se puede retroceder, ya estamos en el paso 1');
     }
-  };
+  }, [currentStep]);
 
   const handleSubmit = async (e?: React.FormEvent) => {
     if (e) {

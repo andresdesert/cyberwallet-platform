@@ -22,8 +22,19 @@ export const useRegisterFormContext = () => {
 export const RegisterFormProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const formState = useRegisterFormState();
 
+  // 🎯 CRÍTICO: Memoizar el valor del contexto para evitar re-renders innecesarios
+  const contextValue = React.useMemo(() => formState, [
+    formState.currentStep,
+    formState.loading,
+    formState.form,
+    formState.errors,
+    formState.touched,
+    formState.showPassword,
+    formState.showConfirmPassword,
+  ]);
+
   return (
-      <RegisterFormContext.Provider value={formState}>
+      <RegisterFormContext.Provider value={contextValue}>
         {children}
       </RegisterFormContext.Provider>
   );
