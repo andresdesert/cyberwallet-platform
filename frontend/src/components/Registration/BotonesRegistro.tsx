@@ -49,7 +49,7 @@ const BotonesRegistro: React.FC<Props> = ({
             position="relative" // 🎯 CRÍTICO: Asegura posicionamiento correcto
         >
             {/* Izquierda */}
-            <Box display="flex" gap={2} order={{ xs: 1, sm: 1 }}>
+            <Box display="flex" gap={2} order={{ xs: 1, sm: 1 }} sx={{ zIndex: 10, position: 'relative' }}>
                 {/* Botón Atrás - visible en pasos 2 y 3 */}
                 {currentStep > 1 && (
                     <Button
@@ -67,6 +67,8 @@ const BotonesRegistro: React.FC<Props> = ({
                         disabled={loading}
                         startIcon={<ArrowBack />}
                         sx={{
+                            zIndex: 1000,
+                            position: 'relative',
                             color: theme.palette.mode === 'dark' 
                                 ? '#90caf9'
                                 : theme.palette.info.main,
@@ -103,6 +105,7 @@ const BotonesRegistro: React.FC<Props> = ({
                                     : 'rgba(25, 118, 210, 0.1)',
                             },
                             transition: 'all 0.3s ease',
+                            pointerEvents: 'auto',
                         }}
                     >
                         Atrás
@@ -117,6 +120,8 @@ const BotonesRegistro: React.FC<Props> = ({
                     startIcon={<Home />}
                     size="small"
                     sx={{
+                        zIndex: 1000,
+                        position: 'relative',
                         order: { xs: 3, sm: 2 },
                         textAlign: 'center',
                         flexShrink: 0,
@@ -145,6 +150,7 @@ const BotonesRegistro: React.FC<Props> = ({
                             transform: 'translateY(-1px)',
                         },
                         transition: 'all 0.3s ease',
+                        pointerEvents: 'auto',
                     }}
                 >
                     Volver al inicio
