@@ -57,6 +57,11 @@ export default defineConfig(() => {
         'react-router-dom',
         'axios',
       ],
+      esbuildOptions: {
+        define: {
+          global: 'globalThis',
+        },
+      },
     },
     // Configuración básica de build
     build: {
@@ -70,6 +75,7 @@ export default defineConfig(() => {
             mui: ['@mui/material', '@mui/icons-material'],
           },
         },
+        external: ['crypto'],
       },
     },
     // Variables de entorno

@@ -1,5 +1,5 @@
-# 🎯 Dockerfile simplificado para CyberWallet Frontend
-# Usa el build local para evitar problemas de crypto.hash en Docker
+# 🚀 Dockerfile simplificado para CyberWallet Frontend
+# Usa build local para evitar problemas de crypto
 
 FROM nginx:alpine
 
@@ -16,18 +16,8 @@ ENV TZ=America/Argentina/Buenos_Aires
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY nginx-default.conf /etc/nginx/conf.d/default.conf
 
-# 🎯 CRÍTICO: Debug - Verificar que los archivos existen antes de copiar
-RUN echo "=== Verificando archivos locales ===" && \
-    ls -la /usr/share/nginx/html/ || echo "Directorio vacío"
-
 # Copiar archivos construidos localmente
 COPY dist/ /usr/share/nginx/html/
-
-# 🎯 CRÍTICO: Debug - Verificar que los archivos se copiaron correctamente
-RUN echo "=== Verificando archivos copiados ===" && \
-    ls -la /usr/share/nginx/html/ && \
-    echo "=== Contenido del index.html ===" && \
-    head -20 /usr/share/nginx/html/index.html
 
 # Crear directorio para logs y cambiar ownership
 RUN mkdir -p /var/log/nginx /var/cache/nginx /var/run && \

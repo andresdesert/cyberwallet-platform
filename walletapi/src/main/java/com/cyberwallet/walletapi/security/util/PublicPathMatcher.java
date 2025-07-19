@@ -26,7 +26,8 @@ public class PublicPathMatcher {
             "/swagger-ui",
             "/v3/api-docs",
             "/webjars",
-            "/api/v1/test-utils"
+            "/api/v1/test-utils",
+            "/actuator"
     );
 
     public static boolean isPublicPath(String path) {

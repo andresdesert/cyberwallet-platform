@@ -65,7 +65,9 @@ public class SecurityConfig {
                                 "/api/v1/dolar",
                                 "/api/v1/validations/dollar",
                                 "/api/v1/cotizaciones",
-                                "/api/v1/test-utils/**"
+                                "/api/v1/test-utils/**",
+                                "/actuator/health",
+                                "/actuator/info"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

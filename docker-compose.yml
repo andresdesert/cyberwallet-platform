@@ -2,8 +2,6 @@
 # 100% Plug & Play - Solo requiere Docker instalado
 # Versión: 2.0.0 - Optimizada para producción
 
-version: '3.8'
-
 services:
   # ========== BASE DE DATOS POSTGRES ==========
   postgres:
