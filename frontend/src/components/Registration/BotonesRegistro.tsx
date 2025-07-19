@@ -31,55 +31,10 @@ const BotonesRegistro: React.FC<Props> = ({
     }, [currentStep]);
 
     const handleVolverInicioClick = () => {
+        console.log('🏠 [BotonesRegistro] Botón Volver al Inicio clickeado');
         log.info(`[BotonesRegistro] Usuario vuelve al inicio desde paso ${currentStep}`);
         navigate('/');
     };
-
-
-
-
-
-    const volverInicioBtn = (
-        <Button
-            variant="text"
-            color="info"
-            onClick={handleVolverInicioClick}
-            startIcon={<Home />}
-            size="small"
-            sx={{
-                order: { xs: 3, sm: 2 },
-                textAlign: 'center',
-                flexShrink: 0,
-                color: theme.palette.mode === 'dark' 
-                    ? '#90caf9' // Azul más brillante para dark mode
-                    : theme.palette.info.main,
-                backgroundColor: theme.palette.mode === 'dark'
-                    ? alpha('#90caf9', 0.15)
-                    : alpha(theme.palette.info.main, 0.1),
-                border: theme.palette.mode === 'dark'
-                    ? '1px solid rgba(144, 202, 249, 0.3)'
-                    : '1px solid rgba(25, 118, 210, 0.2)',
-                borderRadius: 2,
-                px: 2,
-                py: 1,
-                '&:hover': {
-                    backgroundColor: theme.palette.mode === 'dark'
-                        ? alpha('#90caf9', 0.25)
-                        : alpha(theme.palette.info.main, 0.2),
-                    borderColor: theme.palette.mode === 'dark'
-                        ? 'rgba(144, 202, 249, 0.5)'
-                        : 'rgba(25, 118, 210, 0.4)',
-                    color: theme.palette.mode === 'dark' 
-                        ? '#bbdefb' 
-                        : theme.palette.info.main,
-                    transform: 'translateY(-1px)',
-                },
-                transition: 'all 0.3s ease',
-            }}
-        >
-            Volver al inicio
-        </Button>
-    );
 
     return (
         <Box
@@ -95,14 +50,14 @@ const BotonesRegistro: React.FC<Props> = ({
         >
             {/* Izquierda */}
             <Box display="flex" gap={2} order={{ xs: 1, sm: 1 }}>
-                {/* Botón Atrás - siempre visible excepto en el primer paso */}
+                {/* Botón Atrás - visible en pasos 2 y 3 */}
                 {currentStep > 1 && (
                     <Button
                         variant="text"
                         color="info"
                         onClick={() => {
-                            console.log('🔄 [BotonesRegistro] Botón Atrás clickeado, paso actual:', currentStep);
-                            console.log('🔄 [BotonesRegistro] handleBack es función:', typeof handleBack);
+                            console.log('🔙 [BotonesRegistro] Botón Atrás clickeado, paso actual:', currentStep);
+                            console.log('🔙 [BotonesRegistro] handleBack es función:', typeof handleBack);
                             if (typeof handleBack === 'function') {
                                 handleBack();
                             } else {
@@ -155,7 +110,45 @@ const BotonesRegistro: React.FC<Props> = ({
                 )}
                 
                 {/* Botón Volver al Inicio - siempre visible */}
-                {volverInicioBtn}
+                <Button
+                    variant="text"
+                    color="info"
+                    onClick={handleVolverInicioClick}
+                    startIcon={<Home />}
+                    size="small"
+                    sx={{
+                        order: { xs: 3, sm: 2 },
+                        textAlign: 'center',
+                        flexShrink: 0,
+                        color: theme.palette.mode === 'dark' 
+                            ? '#90caf9'
+                            : theme.palette.info.main,
+                        backgroundColor: theme.palette.mode === 'dark'
+                            ? alpha('#90caf9', 0.15)
+                            : alpha(theme.palette.info.main, 0.1),
+                        border: theme.palette.mode === 'dark'
+                            ? '1px solid rgba(144, 202, 249, 0.3)'
+                            : '1px solid rgba(25, 118, 210, 0.2)',
+                        borderRadius: 2,
+                        px: 2,
+                        py: 1,
+                        '&:hover': {
+                            backgroundColor: theme.palette.mode === 'dark'
+                                ? alpha('#90caf9', 0.25)
+                                : alpha(theme.palette.info.main, 0.2),
+                            borderColor: theme.palette.mode === 'dark'
+                                ? 'rgba(144, 202, 249, 0.5)'
+                                : 'rgba(25, 118, 210, 0.4)',
+                            color: theme.palette.mode === 'dark' 
+                                ? '#bbdefb' 
+                                : theme.palette.info.main,
+                            transform: 'translateY(-1px)',
+                        },
+                        transition: 'all 0.3s ease',
+                    }}
+                >
+                    Volver al inicio
+                </Button>
             </Box>
 
             {/* Derecha */}
