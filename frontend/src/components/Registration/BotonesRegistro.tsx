@@ -95,6 +95,7 @@ const BotonesRegistro: React.FC<Props> = ({
         >
             {/* Izquierda */}
             <Box display="flex" gap={2} order={{ xs: 1, sm: 1 }}>
+                {/* Botón Atrás - siempre visible excepto en el primer paso */}
                 {currentStep > 1 && (
                     <Button
                         variant="text"
@@ -102,7 +103,6 @@ const BotonesRegistro: React.FC<Props> = ({
                         onClick={() => {
                             console.log('🔄 [BotonesRegistro] Botón Atrás clickeado, paso actual:', currentStep);
                             console.log('🔄 [BotonesRegistro] handleBack es función:', typeof handleBack);
-                            console.log('🔄 [BotonesRegistro] handleBack:', handleBack);
                             if (typeof handleBack === 'function') {
                                 handleBack();
                             } else {
@@ -113,7 +113,7 @@ const BotonesRegistro: React.FC<Props> = ({
                         startIcon={<ArrowBack />}
                         sx={{
                             color: theme.palette.mode === 'dark' 
-                                ? '#90caf9' // Azul más brillante para dark mode
+                                ? '#90caf9'
                                 : theme.palette.info.main,
                             backgroundColor: theme.palette.mode === 'dark'
                                 ? alpha('#90caf9', 0.15)
@@ -153,7 +153,9 @@ const BotonesRegistro: React.FC<Props> = ({
                         Atrás
                     </Button>
                 )}
-                {(currentStep === 1 || currentStep >= 1) && volverInicioBtn}
+                
+                {/* Botón Volver al Inicio - siempre visible */}
+                {volverInicioBtn}
             </Box>
 
             {/* Derecha */}

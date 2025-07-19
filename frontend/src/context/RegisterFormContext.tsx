@@ -31,6 +31,9 @@ export const RegisterFormProvider: React.FC<{ children: React.ReactNode }> = ({ 
     formState.touched,
     formState.showPassword,
     formState.showConfirmPassword,
+    formState.handleNext,
+    formState.handleBack,
+    formState.handleSubmit,
   ]);
 
   return (
