@@ -1,0 +1,138 @@
+# ========================================
+# Backend - CyberWallet Platform
+# ========================================
+
+# === Java compiled files ===
+*.class
+*.jar
+*.war
+*.ear
+
+# === Build outputs ===
+target/
+build/
+dist/
+site/
+site/jacoco/
+maven-archiver/
+maven-status/
+
+# === Maven ===
+.mvn/
+mvnw
+mvnw.cmd
+
+# === Gradle ===
+.gradle/
+gradlew
+gradlew.bat
+
+# === IDE and Editor files ===
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# Eclipse
+*.launch
+.settings/
+*.metadata/
+bin/
+tmp/
+
+# VS Code
+.vscode/
+!.vscode/extensions.json
+
+# === OS generated files ===
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# === Logs ===
+logs/
+logs/*.log
+logs/application-*.log
+*.log
+*.log.*
+*.out
+
+# === Environment Files ===
+.env
+.env.*
+!*.env.example
+
+# === Application specific configs ===
+application-dev.yml
+application-prod.yml
+application-test.yml
+
+# === Database files ===
+*.db
+*.sqlite
+*.sqlite3
+db/
+
+# === Test Reports ===
+test-output/
+*.xml
+coverage/
+*.lcov
+
+# === Temporary files ===
+*.tmp
+*.temp
+*.bak
+*.orig
+*.rej
+*.swp
+*.swo
+*~
+
+# === Security ===
+# Never commit sensitive files
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+secrets/
+secrets.json
+
+# === Local development files ===
+comandos.txt
+run-tests.bat
+
+# === Docker ===
+docker-compose.override.yml
+
+# === Performance monitoring ===
+performance.log
+metrics.log
+
+# === Backup files ===
+*.backup
+*.old
+*.save
+
+# === Cache directories ===
+.cache/
+
+# === Runtime data ===
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# === Notes ===
+# ⚠️ Asegúrate de NO subir .env ni datos sensibles.
+# ✅ Mantener .env.example como referencia para el equipo.
+# ⚠️ Importante: palabras.txt SÍ se sube porque es clave para la generación de alias.
+
+# === End of file ===

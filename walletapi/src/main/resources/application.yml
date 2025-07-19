@@ -1,0 +1,54 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:cyberwallet}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+    open-in-view: false # <--- ¡Añade esta línea aquí!
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    clean-disabled: false
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration-ms: ${JWT_EXPIRATION_MS:86400000}
+
+logging:
+  level:
+    root: warn
+    org.springframework: warn
+    org.springframework.boot.web.servlet: warn
+    org.springframework.web: warn
+    org.hibernate: warn
+    org.apache.coyote: warn
+    org.springframework.security: warn
+    com.cyberwallet: info  # Reducido de debug a info para producción
+
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    use-root-path: true
+
+# Configuración de datos locales para países y provincias
+local:
+  data:
+    enabled: true
+    countries-file: countries-fallback.json
+    provinces-file: provinces-fallback.json

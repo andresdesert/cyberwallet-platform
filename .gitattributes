@@ -1,0 +1,26 @@
+# === Default behavior ===
+* text=auto eol=lf
+
+# === Java and config files ===
+*.java      text diff=java
+*.yml       text
+*.yaml      text
+*.properties text
+*.xml       text
+
+# === Scripts ===
+*.sh        text eol=lf
+*.bat       text eol=crlf
+
+# === Documentation ===
+*.md        text
+
+# === Additional recommended entries ===
+.gitignore  text
+*.iml       text
+*.ipr       text
+*.iws       text
+*.env*      text
+
+# === Note ===
+# Ensure consistent line endings for developers on Windows/Mac/Linux

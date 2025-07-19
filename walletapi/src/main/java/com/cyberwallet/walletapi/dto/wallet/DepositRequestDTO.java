@@ -1,0 +1,33 @@
+package com.cyberwallet.walletapi.dto.wallet;
+
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.math.BigDecimal;
+
+/**
+ * Petición para depositar fondos en la billetera del usuario autenticado.
+ */
+@Getter
+@Setter
+@NoArgsConstructor
+public class DepositRequestDTO {
+
+    /**
+     * Monto a depositar (mayor a 0).
+     */
+    @NotNull(message = "El monto no puede ser nulo.")
+    @DecimalMin(value = "0.01", inclusive = true, message = "El monto debe ser mayor que 0.")
+    @DecimalMax(value = "3000000.00", inclusive = true, message = "El monto máximo permitido es 3 millones.")
+    @Digits(integer = 10, fraction = 2, message = "El monto debe tener como máximo 2 decimales.")
+    private BigDecimal amount;
+
+    public DepositRequestDTO(BigDecimal amount) {
+        this.amount = amount;
+    }
+}

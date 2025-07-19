@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>CyberWallet - Login & Registro</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 400px; margin: auto; }
+        h2 { text-align: center; }
+        form { display: none; margin-top: 20px; }
+        form.active { display: block; }
+        label { display: block; margin-top: 10px; }
+        input { width: 100%; padding: 8px; margin-top: 4px; }
+        button { margin-top: 20px; width: 100%; padding: 10px; font-size: 16px; }
+        #message { margin-top: 20px; text-align: center; font-weight: bold; }
+        .error { color: red; }
+        .success { color: green; }
+        .nav-buttons { display: flex; justify-content: space-around; margin-bottom: 20px; }
+        .nav-buttons button { width: 45%; }
+    </style>
+</head>
+<body>
+
+<h2>CyberWallet</h2>
+
+<div class="nav-buttons">
+    <button id="btnShowLogin">Login</button>
+    <button id="btnShowRegister">Registro</button>
+</div>
+
+<!-- Formulario Login -->
+<form id="loginForm" class="active" novalidate>
+    <label for="loginEmail">Email:</label>
+    <input type="email" id="loginEmail" required
+           pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
+           title="Debe ser un email válido, ej: usuario@dominio.com" />
+
+    <label for="loginPassword">Contraseña:</label>
+    <input type="password" id="loginPassword" required minlength="8" maxlength="50"
+           title="Contraseña entre 8 y 50 caracteres" />
+
+    <button type="submit">Iniciar sesión</button>
+</form>
+
+<!-- Formulario Registro -->
+<form id="registerForm" novalidate>
+    <label for="regNombre">Nombre:</label>
+    <input id="regNombre" name="nombre" type="text" required
+           pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$" minlength="2" maxlength="50"
+           title="Solo letras, espacios y tildes. Mínimo 2 caracteres." />
+
+    <label for="regApellido">Apellido:</label>
+    <input id="regApellido" name="apellido" type="text" required
+           pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$" minlength="2" maxlength="50"
+           title="Solo letras, espacios y tildes. Mínimo 2 caracteres." />
+
+    <label for="regDni">DNI:</label>
+    <input id="regDni" name="dni" type="text" required
+           pattern="^\d{8}$" minlength="8" maxlength="8"
+           title="DNI debe tener exactamente 8 dígitos numéricos." />
+
+    <label for="regEmail">Email:</label>
+    <input id="regEmail" name="email" type="email" required
+           pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
+           title="Debe ser un email válido, ej: usuario@dominio.com" />
+
+    <label for="regPassword">Contraseña:</label>
+    <input id="regPassword" name="password" type="password" required minlength="8" maxlength="50"
+           title="Contraseña entre 8 y 50 caracteres" />
+
+    <label for="regDireccion">Dirección:</label>
+    <input id="regDireccion" name="direccion" type="text" required minlength="5" maxlength="100"
+           title="Dirección debe tener entre 5 y 100 caracteres" />
+
+    <button type="submit">Registrar</button>
+</form>
+
+<div id="message"></div>
+
+<script>
+    // Manejo de visibilidad entre formularios
+    const btnLogin = document.getElementById('btnShowLogin');
+    const btnRegister = document.getElementById('btnShowRegister');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const messageDiv = document.getElementById('message');
+
+    btnLogin.addEventListener('click', () => {
+        loginForm.classList.add('active');
+        registerForm.classList.remove('active');
+        messageDiv.textContent = '';
+        messageDiv.className = '';
+    });
+
+    btnRegister.addEventListener('click', () => {
+        registerForm.classList.add('active');
+        loginForm.classList.remove('active');
+        messageDiv.textContent = '';
+        messageDiv.className = '';
+    });
+
+    // Validación y submit login
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        messageDiv.textContent = '';
+        messageDiv.className = '';
+
+        if (!loginForm.checkValidity()) {
+            loginForm.reportValidity();
+            return;
+        }
+
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+
+        try {
+            const response = await fetch('/api/v1/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                messageDiv.textContent = 'Usuario logeado con éxito!';
+                messageDiv.className = 'success';
+                console.log('Token:', data.accessToken);
+            } else {
+                messageDiv.textContent = data.message || (data.errors ? data.errors.join(', ') : 'Error desconocido');
+                messageDiv.className = 'error';
+            }
+        } catch (error) {
+            messageDiv.textContent = 'Error de conexión al backend.';
+            messageDiv.className = 'error';
+        }
+    });
+
+    // Validación y submit registro
+    registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        messageDiv.textContent = '';
+        messageDiv.className = '';
+
+        if (!registerForm.checkValidity()) {
+            registerForm.reportValidity();
+            return;
+        }
+
+        const nombre = document.getElementById('regNombre').value.trim();
+        const apellido = document.getElementById('regApellido').value.trim();
+        const dni = document.getElementById('regDni').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const password = document.getElementById('regPassword').value;
+        const direccion = document.getElementById('regDireccion').value.trim();
+
+        try {
+            const response = await fetch('/api/v1/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nombre, apellido, email, password, dni, direccion }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                messageDiv.textContent = 'Usuario registrado con éxito! Puedes iniciar sesión.';
+                messageDiv.className = 'success';
+                registerForm.reset();
+            } else {
+                messageDiv.textContent = data.message || (data.errors ? data.errors.join(', ') : 'Error desconocido');
+                messageDiv.className = 'error';
+            }
+        } catch (error) {
+            messageDiv.textContent = 'Error de conexión al backend.';
+            messageDiv.className = 'error';
+        }
+    });
+</script>
+
+</body>
+</html>

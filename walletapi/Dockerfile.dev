@@ -1,0 +1,22 @@
+# 🎯 Dockerfile para Desarrollo - CyberWallet Backend API
+# Hot reload y debugging habilitado
+
+FROM maven:3.9.6-eclipse-temurin-17-alpine
+
+# Instalar dependencias del sistema
+RUN apk add --no-cache \
+    git \
+    curl \
+    && rm -rf /var/cache/apk/*
+
+# Configurar variables de entorno para Maven
+ENV MAVEN_OPTS="-Xmx2048m -XX:+TieredCompilation -XX:TieredStopAtLevel=1"
+
+# Establecer directorio de trabajo
+WORKDIR /app
+
+# Exponer puertos
+EXPOSE 8080 5005
+
+# Comando por defecto para desarrollo
+CMD ["mvn", "spring-boot:run", "-Dspring-boot.run.jvmArguments='-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005'"] 

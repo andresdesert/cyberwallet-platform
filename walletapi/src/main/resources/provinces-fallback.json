@@ -1,0 +1,35 @@
+{
+  "argentina": [
+    "Buenos Aires", "Ciudad Autónoma de Buenos Aires", "Córdoba", "Santa Fe", "Mendoza",
+    "Tucumán", "Salta", "Chaco", "Corrientes", "Entre Ríos", "Misiones", "Santiago del Estero",
+    "Jujuy", "San Juan", "San Luis", "La Rioja", "Catamarca", "La Pampa", "Neuquén",
+    "Río Negro", "Chubut", "Santa Cruz", "Tierra del Fuego"
+  ],
+  "uruguay": [
+    "Montevideo", "Canelones", "Maldonado", "Salto", "Paysandú", "Rivera", "Tacuarembó",
+    "Artigas", "Rocha", "Florida", "Lavalleja", "San José", "Colonia", "Durazno", "Treinta y Tres",
+    "Cerro Largo", "Flores", "Río Negro", "Soriano"
+  ],
+  "brazil": [
+    "Acre", "Alagoas", "Amapá", "Amazonas", "Bahia", "Ceará", "Distrito Federal", "Espírito Santo", "Goiás",
+    "Maranhão", "Mato Grosso", "Mato Grosso do Sul", "Minas Gerais", "Pará", "Paraíba", "Paraná", "Pernambuco",
+    "Piauí", "Rio de Janeiro", "Rio Grande do Norte", "Rio Grande do Sul", "Rondônia", "Roraima", "Santa Catarina",
+    "São Paulo", "Sergipe", "Tocantins"
+  ],
+  "chile": [
+    "Región Metropolitana", "Valparaíso", "Biobío", "Maule", "Araucanía", "Los Lagos",
+    "Atacama", "Coquimbo", "Antofagasta", "Tarapacá", "Magallanes", "Los Ríos", "Ñuble", "Arica y Parinacota"
+  ],
+  "paraguay": [
+    "Asunción", "Central", "Alto Paraná", "Itapúa", "Caaguazú", "San Pedro",
+    "Cordillera", "Guairá", "Caazapá", "Paraguarí", "Amambay", "Concepción", "Canindeyú"
+  ],
+  "peru": [
+    "Lima", "Arequipa", "Cusco", "La Libertad", "Piura", "Junín", "Lambayeque",
+    "Puno", "Cajamarca", "Ayacucho", "Ica", "Tacna", "Huánuco", "Ucayali"
+  ],
+  "colombia": [
+    "Bogotá", "Antioquia", "Valle del Cauca", "Atlántico", "Cundinamarca", "Santander",
+    "Bolívar", "Tolima", "Magdalena", "Nariño", "Córdoba", "Cauca", "Boyacá"
+  ]
+}

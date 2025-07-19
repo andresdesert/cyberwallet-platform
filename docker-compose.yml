@@ -1,0 +1,117 @@
+# 🎯 Docker Compose para CyberWallet - Sistema Completo
+# 100% Plug & Play - Solo requiere Docker instalado
+
+# ========== SERVICIOS ==========
+services:
+  # ========== BASE DE DATOS ==========
+  postgres:
+    image: postgres:15-alpine
+    container_name: cyberwallet-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: cyberwallet
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./walletapi/src/main/resources/db/init:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    networks:
+      - cyberwallet-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d cyberwallet"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # ========== BACKEND API ==========
+  backend:
+    build:
+      context: ./walletapi
+      dockerfile: Dockerfile
+    container_name: cyberwallet-backend
+    restart: unless-stopped
+    environment:
+      # Configuración de la base de datos
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: cyberwallet
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      
+      # Configuración del servidor
+      SERVER_PORT: 8080
+      
+      # Configuración JWT
+      JWT_SECRET: cyberwallet-super-secret-jwt-key-2025
+      JWT_EXPIRATION_MS: 86400000
+      
+      # Configuración de logging
+      LOGGING_LEVEL_ROOT: warn
+      LOGGING_LEVEL_COM_CYBERWALLET: info
+      
+      # Configuración de Spring
+      SPRING_PROFILES_ACTIVE: docker
+      
+      # Configuración de timezone
+      TZ: America/Argentina/Buenos_Aires
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - cyberwallet-network
+    volumes:
+      - ./walletapi/logs:/app/logs
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
+    #   start_period: 60s
+
+  # ========== FRONTEND ==========
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: cyberwallet-frontend
+    restart: unless-stopped
+    environment:
+      # Configuración de la aplicación
+      VITE_API_BASE_URL: http://localhost:8080
+      VITE_APP_NAME: CyberWallet
+      VITE_APP_VERSION: 2.0.0
+      
+      # Configuración de timezone
+      TZ: America/Argentina/Buenos_Aires
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_started
+    networks:
+      - cyberwallet-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+# ========== VOLÚMENES ==========
+volumes:
+  postgres_data:
+    driver: local
+
+# ========== REDES ==========
+networks:
+  cyberwallet-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16 

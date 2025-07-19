@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    
+    <!-- 🎯 Meta tags críticos para Core Web Vitals y SEO -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#6366f1" />
+    <meta name="color-scheme" content="light dark" />
+    
+    <!-- 🚀 CRÍTICO: Preloads optimizados para LCP -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- 🎯 CRÍTICO: Preload de fuentes críticas -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" /></noscript>
+    
+    <!-- 📱 PWA y favicons optimizados -->
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    
+    <!-- 🎨 SEO y branding -->
+    <title>CyberWallet - El Futuro de las Finanzas Digitales</title>
+    <meta name="description" content="CyberWallet es la plataforma financiera más avanzada del mercado. Seguridad bancaria, transacciones instantáneas y control total sobre tus finanzas digitales." />
+    <meta name="keywords" content="fintech, billetera digital, criptomonedas, finanzas, cyberwallet, blockchain, pagos digitales" />
+    <meta name="author" content="Andrés Simahan - QA & Security Specialist" />
+    
+    <!-- 🌐 Open Graph para redes sociales -->
+    <meta property="og:title" content="CyberWallet - Finanzas Digitales del Futuro" />
+    <meta property="og:description" content="Plataforma fintech avanzada con seguridad militar y transacciones instantáneas" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://cyberwallet.com" />
+    <meta property="og:image" content="/cyberwallet-og.jpg" />
+    <meta property="og:locale" content="es_AR" />
+    
+    <!-- 🐦 Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="CyberWallet - Finanzas Digitales" />
+    <meta name="twitter:description" content="La plataforma fintech más avanzada del mercado" />
+    <meta name="twitter:image" content="/cyberwallet-twitter.jpg" />
+    
+    <!-- 🔒 Seguridad -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src 'self' fonts.googleapis.com fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' http://localhost:8080 https://api.exchangerate-api.com;" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    
+    <!-- 🎭 Optimizaciones de renderizado -->
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    
+    <!-- 🚀 CRÍTICO: Resource hints optimizados para performance -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+    <link rel="preconnect" href="/api" />
+    
+    <!-- 📊 Schema.org structured data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FinancialService",
+      "name": "CyberWallet",
+      "description": "Plataforma financiera digital avanzada",
+      "url": "https://cyberwallet.com",
+      "logo": "https://cyberwallet.com/logo.png",
+      "foundingDate": "2025",
+      "founder": {
+        "@type": "Person",
+        "name": "Andrés Simahan",
+        "jobTitle": "QA & Security Specialist"
+      },
+      "serviceType": "Digital Financial Services",
+      "areaServed": {
+        "@type": "Country",
+        "name": "Argentina"
+      }
+    }
+    </script>
+    
+    <!-- 🎯 CRÍTICO: CSS crítico inline para mejorar LCP -->
+    <style>
+      /* CSS crítico para el primer render */
+      body {
+        margin: 0;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: #fafafa; /* Fondo neutro en lugar del gradiente violeta */
+        min-height: 100vh;
+      }
+      #root {
+        min-height: 100vh;
+      }
+      /* 🎯 CRÍTICO: Skeleton loader para mejorar percepción de velocidad */
+      .skeleton {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: loading 1.5s infinite;
+      }
+      @keyframes loading {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <!-- 🎯 CRÍTICO: Skeleton loader para mejorar LCP -->
+      <div style="display: flex; justify-content: center; align-items: center; min-height: 100vh;">
+        <div style="text-align: center;">
+          <div class="skeleton" style="width: 120px; height: 120px; border-radius: 50%; margin: 0 auto 20px;"></div>
+          <div class="skeleton" style="width: 200px; height: 24px; border-radius: 4px; margin: 10px auto;"></div>
+          <div class="skeleton" style="width: 150px; height: 16px; border-radius: 4px; margin: 10px auto;"></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 📊 Performance monitoring optimizado -->
+    <script>
+      // 🎯 CRÍTICO: Métricas de performance optimizadas
+      if ('PerformanceObserver' in window) {
+        const perfObserver = new PerformanceObserver((list) => {
+          list.getEntries().forEach((entry) => {
+            if (entry.entryType === 'largest-contentful-paint') {
+              console.log('LCP:', entry.startTime);
+              // 🎯 CRÍTICO: Reportar métricas a analytics si es necesario
+            }
+          });
+        });
+        
+        try {
+          perfObserver.observe({entryTypes: ['largest-contentful-paint', 'first-input', 'layout-shift']});
+        } catch (e) {
+          console.log('Performance observer not supported');
+        }
+      }
+      
+      // 🎯 CRÍTICO: Remover skeleton cuando la app esté lista
+      window.addEventListener('load', () => {
+        const skeleton = document.querySelector('#root > div');
+        if (skeleton) {
+          skeleton.style.display = 'none';
+        }
+      });
+    </script>
+    
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

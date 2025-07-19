@@ -1,0 +1,64 @@
+{
+  "countries": [
+    {
+      "name": "Argentina",
+      "iso2": "AR",
+      "iso3": "ARG",
+      "common": "Argentina"
+    },
+    {
+      "name": "Brasil",
+      "iso2": "BR", 
+      "iso3": "BRA",
+      "common": "Brasil"
+    },
+    {
+      "name": "Uruguay",
+      "iso2": "UY",
+      "iso3": "URY", 
+      "common": "Uruguay"
+    },
+    {
+      "name": "Chile",
+      "iso2": "CL",
+      "iso3": "CHL",
+      "common": "Chile"
+    },
+    {
+      "name": "Paraguay",
+      "iso2": "PY",
+      "iso3": "PRY",
+      "common": "Paraguay"
+    },
+    {
+      "name": "Perú",
+      "iso2": "PE",
+      "iso3": "PER",
+      "common": "Perú"
+    },
+    {
+      "name": "Colombia",
+      "iso2": "CO",
+      "iso3": "COL",
+      "common": "Colombia"
+    },
+    {
+      "name": "Bolivia",
+      "iso2": "BO",
+      "iso3": "BOL",
+      "common": "Bolivia"
+    },
+    {
+      "name": "Ecuador",
+      "iso2": "EC",
+      "iso3": "ECU",
+      "common": "Ecuador"
+    },
+    {
+      "name": "Venezuela",
+      "iso2": "VE",
+      "iso3": "VEN",
+      "common": "Venezuela"
+    }
+  ]
+} 

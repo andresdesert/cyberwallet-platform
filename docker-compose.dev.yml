@@ -1,0 +1,134 @@
+# 🎯 Docker Compose para Desarrollo - CyberWallet
+# Hot reload y debugging habilitado
+
+version: '3.8'
+
+# ========== SERVICIOS ==========
+services:
+  # ========== BASE DE DATOS ==========
+  postgres:
+    image: postgres:15-alpine
+    container_name: cyberwallet-db-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: cyberwallet_dev
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+      - ./walletapi/src/main/resources/db/init:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    networks:
+      - cyberwallet-dev-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d cyberwallet_dev"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # ========== BACKEND API (DESARROLLO) ==========
+  backend-dev:
+    build:
+      context: ./walletapi
+      dockerfile: Dockerfile.dev
+      target: build
+    container_name: cyberwallet-backend-dev
+    restart: unless-stopped
+    environment:
+      # Configuración de la base de datos
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: cyberwallet_dev
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      
+      # Configuración del servidor
+      SERVER_PORT: 8080
+      
+      # Configuración JWT
+      JWT_SECRET: cyberwallet-dev-jwt-key-2025
+      JWT_EXPIRATION_MS: 86400000
+      
+      # Configuración de logging (más verboso para desarrollo)
+      LOGGING_LEVEL_ROOT: info
+      LOGGING_LEVEL_COM_CYBERWALLET: debug
+      
+      # Configuración de Spring
+      SPRING_PROFILES_ACTIVE: dev
+      
+      # Configuración de timezone
+      TZ: America/Argentina/Buenos_Aires
+    ports:
+      - "8080:8080"
+      - "5005:5005"  # Debug port
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - cyberwallet-dev-network
+    volumes:
+      - ./walletapi:/app
+      - ./walletapi/logs:/app/logs
+      - maven_cache:/root/.m2
+    command: ["mvn", "spring-boot:run", "-Dspring-boot.run.jvmArguments='-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005'"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # ========== FRONTEND (DESARROLLO) ==========
+  frontend-dev:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+      target: build
+    container_name: cyberwallet-frontend-dev
+    restart: unless-stopped
+    environment:
+      # Configuración de la aplicación
+      VITE_API_BASE_URL: http://localhost:8080
+      VITE_APP_NAME: CyberWallet Dev
+      VITE_APP_VERSION: 2.0.0-dev
+      
+      # Configuración de timezone
+      TZ: America/Argentina/Buenos_Aires
+    ports:
+      - "3000:3000"
+    depends_on:
+      backend-dev:
+        condition: service_healthy
+    networks:
+      - cyberwallet-dev-network
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - npm_cache:/root/.npm
+    command: ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+# ========== VOLÚMENES ==========
+volumes:
+  postgres_dev_data:
+    driver: local
+  maven_cache:
+    driver: local
+  npm_cache:
+    driver: local
+
+# ========== REDES ==========
+networks:
+  cyberwallet-dev-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16 

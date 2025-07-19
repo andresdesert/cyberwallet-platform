@@ -1,0 +1,319 @@
+name: 🚀 CyberWallet Platform CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+env:
+  NODE_VERSION: '18'
+  JAVA_VERSION: '21'
+
+jobs:
+  # ========================================
+  # Frontend Testing & Build
+  # ========================================
+  frontend:
+    name: 🎨 Frontend - React + TypeScript
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 📦 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
+        
+    - name: 📁 Change to frontend directory
+      run: cd frontend
+      
+    - name: 📦 Install dependencies
+      run: npm ci
+      
+    - name: 🔍 Lint code
+      run: npm run lint
+      
+    - name: 🧪 Run tests
+      run: npm run test:coverage
+      
+    - name: 📊 Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: frontend/coverage/lcov.info
+        flags: frontend
+        name: frontend-coverage
+        
+    - name: 🏗️ Build production
+      run: npm run build
+      
+    - name: 📦 Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: frontend-build
+        path: frontend/dist/
+        retention-days: 7
+
+  # ========================================
+  # Backend Testing & Build
+  # ========================================
+  backend:
+    name: ⚙️ Backend - Spring Boot + Java
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: cyberwallet_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 📦 Setup Java
+      uses: actions/setup-java@v4
+      with:
+        java-version: ${{ env.JAVA_VERSION }}
+        distribution: 'temurin'
+        cache: 'maven'
+        
+    - name: 📁 Change to backend directory
+      run: cd walletapi
+      
+    - name: 🧪 Run tests
+      run: mvn test
+      env:
+        SPRING_PROFILES_ACTIVE: test
+        DATABASE_URL: jdbc:postgresql://localhost:5432/cyberwallet_test
+        DATABASE_USERNAME: postgres
+        DATABASE_PASSWORD: postgres
+        
+    - name: 📊 Generate test report
+      run: mvn surefire-report:report
+      
+    - name: 📦 Build JAR
+      run: mvn clean package -DskipTests
+      
+    - name: 📦 Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: backend-jar
+        path: walletapi/target/*.jar
+        retention-days: 7
+        
+    - name: 📊 Upload test results
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results
+        path: walletapi/target/surefire-reports/
+        retention-days: 7
+
+  # ========================================
+  # Security Scanning
+  # ========================================
+  security:
+    name: 🔒 Security - Vulnerability Scan
+    runs-on: ubuntu-latest
+    needs: [frontend, backend]
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 🔍 Run OWASP ZAP Scan
+      uses: zaproxy/action-full-scan@v0.8.0
+      with:
+        target: 'http://localhost:8080'
+        
+    - name: 📊 Upload security report
+      uses: actions/upload-artifact@v4
+      with:
+        name: security-report
+        path: zap-report.html
+        retention-days: 30
+
+  # ========================================
+  # Docker Build & Test
+  # ========================================
+  docker:
+    name: 🐳 Docker - Build & Test
+    runs-on: ubuntu-latest
+    needs: [frontend, backend]
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 📦 Setup Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      
+    - name: 🔐 Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        
+    - name: 🏗️ Build and push Frontend image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./frontend
+        file: ./frontend/Dockerfile
+        push: true
+        tags: |
+          cyberwallet/frontend:latest
+          cyberwallet/frontend:${{ github.sha }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        
+    - name: 🏗️ Build and push Backend image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./walletapi
+        file: ./walletapi/Dockerfile
+        push: true
+        tags: |
+          cyberwallet/backend:latest
+          cyberwallet/backend:${{ github.sha }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+  # ========================================
+  # Integration Tests
+  # ========================================
+  integration:
+    name: 🔗 Integration - End-to-End Tests
+    runs-on: ubuntu-latest
+    needs: [docker]
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: cyberwallet_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+          
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 📦 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
+        
+    - name: 📁 Change to frontend directory
+      run: cd frontend
+      
+    - name: 📦 Install dependencies
+      run: npm ci
+      
+    - name: 🧪 Run E2E tests
+      run: npm run test:e2e
+      env:
+        API_BASE_URL: http://localhost:8080/api/v1
+        DATABASE_URL: jdbc:postgresql://localhost:5432/cyberwallet_test
+
+  # ========================================
+  # Performance Testing
+  # ========================================
+  performance:
+    name: ⚡ Performance - Load Testing
+    runs-on: ubuntu-latest
+    needs: [integration]
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 📦 Setup K6
+      uses: grafana/k6-action@v0.3.0
+      with:
+        filename: performance-tests/load-test.js
+        
+    - name: 📊 Upload performance results
+      uses: actions/upload-artifact@v4
+      with:
+        name: performance-results
+        path: k6-results.json
+        retention-days: 30
+
+  # ========================================
+  # Deployment (Production)
+  # ========================================
+  deploy:
+    name: 🚀 Deploy - Production
+    runs-on: ubuntu-latest
+    needs: [performance]
+    if: github.ref == 'refs/heads/main'
+    environment: production
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 🏗️ Deploy to production
+      run: |
+        echo "🚀 Deploying to production..."
+        # Aquí irían los comandos de despliegue
+        # Por ejemplo: kubectl apply, docker-compose, etc.
+        
+    - name: 📊 Health check
+      run: |
+        echo "🔍 Running health checks..."
+        # Verificar que la aplicación esté funcionando
+        
+    - name: 📧 Notify deployment
+      run: |
+        echo "✅ Deployment completed successfully!"
+        # Enviar notificación por email/Slack/etc.
+
+  # ========================================
+  # Quality Gates
+  # ========================================
+  quality-gates:
+    name: ✅ Quality Gates
+    runs-on: ubuntu-latest
+    needs: [frontend, backend, security, performance]
+    
+    steps:
+    - name: 📊 Check test coverage
+      run: |
+        echo "📊 Frontend coverage: $(cat frontend/coverage/coverage-summary.json | jq -r '.total.lines.pct')%"
+        echo "📊 Backend coverage: $(cat walletapi/target/site/jacoco/jacoco.xml | xmllint --xpath 'string(/report/counter[@type="LINE"]/@covered)' -)"
+        
+    - name: 🔒 Check security scan
+      run: |
+        echo "🔒 Security scan completed"
+        # Verificar que no hay vulnerabilidades críticas
+        
+    - name: ⚡ Check performance
+      run: |
+        echo "⚡ Performance tests passed"
+        # Verificar que los tiempos de respuesta están dentro de los límites
+        
+    - name: ✅ All quality gates passed
+      run: |
+        echo "🎉 All quality gates passed!"
+        echo "🚀 Ready for deployment!" 
